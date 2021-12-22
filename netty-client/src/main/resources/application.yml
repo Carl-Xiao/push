@@ -1,0 +1,6 @@
+server:
+  port: 9091
+netty:
+  server:
+    host: 127.0.0.1
+    port: 11011

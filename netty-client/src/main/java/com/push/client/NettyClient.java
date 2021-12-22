@@ -1,4 +1,4 @@
-package com.push.server;
+package com.push.client;
 
 import com.common.model.CustomProtocol;
 import com.push.initlizer.ClientInitlizer;
