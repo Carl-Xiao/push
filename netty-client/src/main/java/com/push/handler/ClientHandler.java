@@ -2,6 +2,7 @@ package com.push.handler;
 
 
 import com.common.model.CustomProtocol;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,17 +16,17 @@ import org.slf4j.LoggerFactory;
 /**
  * @author carl-xiao
  **/
-public class ServerHandler extends SimpleChannelInboundHandler<CustomProtocol> {
+public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+    private final static Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
-            if (idleStateEvent.state() == IdleState.READER_IDLE) {
+            if (idleStateEvent.state() == IdleState.WRITER_IDLE) {
                 logger.info("超过5s没有收到消息");
-                CustomProtocol customProtocol = new CustomProtocol(12345L, "pong");
+                CustomProtocol customProtocol = new CustomProtocol(45678L, "pong");
                 ctx.writeAndFlush(Unpooled.copiedBuffer(customProtocol.toString(), CharsetUtil.UTF_8))
                         .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
             }
@@ -34,10 +35,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<CustomProtocol> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CustomProtocol customProtocol) throws Exception {
-        logger.info("customProtocol={}", customProtocol);
-        customProtocol.setHeader(customProtocol.getHeader() + 1000);
-        customProtocol.setContent(customProtocol.getContent() + 1000);
-        ctx.writeAndFlush(Unpooled.copiedBuffer(customProtocol.toString(), CharsetUtil.UTF_8));
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("channelId{} 建立联系", ctx.channel().id().toString());
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        logger.info("客户端收到消息={}", in.toString(CharsetUtil.UTF_8));
     }
 }
