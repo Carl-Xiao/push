@@ -1,7 +1,7 @@
-package com.push.client;
+package com.push.netty.client;
 
 import com.common.model.CustomProtocol;
-import com.push.initlizer.ClientInitlizer;
+import com.push.netty.initlizer.ClientInitlizer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -23,7 +23,6 @@ public class NettyClient {
     private final static Logger LOGGER = LoggerFactory.getLogger(NettyClient.class);
 
     private EventLoopGroup group = new NioEventLoopGroup();
-
 
     @Value("${netty.server.port}")
     private int nettyPort;

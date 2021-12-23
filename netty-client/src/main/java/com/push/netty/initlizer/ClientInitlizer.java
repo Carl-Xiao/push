@@ -1,7 +1,7 @@
-package com.push.initlizer;
+package com.push.netty.initlizer;
 
-import com.push.encoder.MsgEncoder;
-import com.push.handler.ClientHandler;
+import com.push.netty.encoder.MsgEncoder;
+import com.push.netty.handler.ClientHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.handler.timeout.IdleStateHandler;

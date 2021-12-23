@@ -23,6 +23,10 @@ public class BaseResponse<T> implements Serializable {
      */
     private T data;
 
+    public BaseResponse(){
+
+    }
+
     public BaseResponse(String code, String message, String reqNo, T data) {
         this.code = code;
         this.message = message;

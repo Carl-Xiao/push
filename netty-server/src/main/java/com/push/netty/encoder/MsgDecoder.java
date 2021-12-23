@@ -1,4 +1,4 @@
-package com.push.encoder;
+package com.push.netty.encoder;
 
 import com.common.model.CustomProtocol;
 import io.netty.buffer.ByteBuf;
@@ -22,7 +22,7 @@ public class MsgDecoder extends ByteToMessageDecoder {
         in.readBytes(bytes);
         String content = new String(bytes);
         CustomProtocol customProtocol = new CustomProtocol() ;
-        customProtocol.setHeader(header);
+        customProtocol.setId(header);
         customProtocol.setContent(content) ;
         out.add(customProtocol) ;
     }

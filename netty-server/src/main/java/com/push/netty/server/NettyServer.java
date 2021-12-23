@@ -1,15 +1,17 @@
-package com.push.server;
+package com.push.netty.server;
 
 import com.alibaba.fastjson.JSON;
 import com.common.model.CustomProtocol;
-import com.push.handler.ServerHandler;
-import com.push.initlizer.ServerInitlizer;
+import com.push.netty.ChannelHolder;
+import com.push.netty.handler.ServerHandler;
+import com.push.netty.initlizer.ServerInitlizer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +31,6 @@ public class NettyServer {
     private EventLoopGroup boss = new NioEventLoopGroup();
     private EventLoopGroup worker = new NioEventLoopGroup();
 
-    private NioServerSocketChannel channel;
-
     @Value("${netty.port}")
     Integer nettyPort;
 
@@ -49,7 +49,6 @@ public class NettyServer {
             if (future.isSuccess()) {
                 logger.info("netty 启动成功 端口号{}", nettyPort);
             }
-            channel = (NioServerSocketChannel) future.channel();
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
         }
@@ -65,8 +64,11 @@ public class NettyServer {
     }
 
     public void sendMsg(CustomProtocol customProtocol) {
-        ChannelFuture future =  channel.writeAndFlush(customProtocol);
+        NioSocketChannel socketChannel = ChannelHolder.get(customProtocol.getId());
+        if (null == socketChannel) {
 
+        }
+        ChannelFuture future = socketChannel.writeAndFlush(customProtocol);
         future.addListener((ChannelFutureListener) channelFuture ->
                 logger.info("服务端手动发消息成功={}", JSON.toJSONString(customProtocol)));
 

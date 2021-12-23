@@ -1,12 +1,9 @@
-package com.push.encoder;
+package com.push.netty.encoder;
 
 import com.common.model.CustomProtocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
-
-import java.util.List;
 
 /**
  * 加密
@@ -16,7 +13,7 @@ import java.util.List;
 public class MsgEncoder extends MessageToByteEncoder<CustomProtocol> {
     @Override
     protected void encode(ChannelHandlerContext ctx, CustomProtocol msg, ByteBuf out) throws Exception {
-        out.writeLong(msg.getHeader());
+        out.writeLong(msg.getId());
         out.writeBytes(msg.getContent().getBytes());
     }
 }
