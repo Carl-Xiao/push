@@ -2,6 +2,8 @@ package com.push.netty.server;
 
 import com.alibaba.fastjson.JSON;
 import com.common.model.CustomProtocol;
+import com.common.model.protobuf.BaseRequestProto;
+import com.common.model.protobuf.BaseResponseProto;
 import com.push.netty.ChannelHolder;
 import com.push.netty.handler.ServerHandler;
 import com.push.netty.initlizer.ServerInitlizer;
@@ -66,12 +68,15 @@ public class NettyServer {
     public void sendMsg(CustomProtocol customProtocol) {
         NioSocketChannel socketChannel = ChannelHolder.get(customProtocol.getId());
         if (null == socketChannel) {
-
+            logger.error("异常");
         }
-        ChannelFuture future = socketChannel.writeAndFlush(customProtocol);
+        BaseResponseProto.Response protocol = BaseResponseProto.Response.newBuilder()
+                .setResId(customProtocol.getId() + "")
+                .setResMsg(customProtocol.getContent())
+                .build();
+        ChannelFuture future = socketChannel.writeAndFlush(protocol);
         future.addListener((ChannelFutureListener) channelFuture ->
                 logger.info("服务端手动发消息成功={}", JSON.toJSONString(customProtocol)));
-
     }
 
 }

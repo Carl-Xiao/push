@@ -20,6 +20,7 @@
         <module>push-common</module>
         <module>netty-client</module>
         <module>netty-admin</module>
+        <module>netty-zk</module>
     </modules>
 
     <dependencies>
