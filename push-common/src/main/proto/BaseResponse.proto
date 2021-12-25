@@ -1,0 +1,9 @@
+syntax = "proto3";
+option java_package = "com.common.model.protobuf";
+option java_outer_classname = "BaseResponseProto";
+
+//响应体
+message Response {
+  string resId = 1;
+  string resMsg = 2;
+}

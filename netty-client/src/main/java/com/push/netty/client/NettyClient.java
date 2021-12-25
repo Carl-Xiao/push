@@ -1,9 +1,11 @@
 package com.push.netty.client;
 
 import com.common.model.CustomProtocol;
+import com.common.model.protobuf.BaseRequestProto;
 import com.push.netty.initlizer.ClientInitlizer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -30,7 +32,7 @@ public class NettyClient {
     @Value("${netty.server.host}")
     private String host;
 
-    private SocketChannel channel ;
+    private SocketChannel channel;
 
     @PostConstruct
     public void start() throws InterruptedException {
@@ -49,10 +51,24 @@ public class NettyClient {
 
     /**
      * 发送消息
+     *
      * @param customProtocol
      */
-    public void sendMsg(CustomProtocol customProtocol){
-        channel.writeAndFlush(customProtocol) ;
+    public void sendMsg(CustomProtocol customProtocol) {
+        channel.writeAndFlush(customProtocol);
     }
+
+
+    public void sendPbMsg(CustomProtocol customProtocol) {
+        BaseRequestProto.Request protocol = BaseRequestProto.Request.newBuilder()
+                .setReqId(customProtocol.getId() + "")
+                .setReqMsg(customProtocol.getContent())
+                .build();
+
+        ChannelFuture future = channel.writeAndFlush(protocol);
+        future.addListener((ChannelFutureListener) channelFuture ->
+                LOGGER.info("客户端手动发送 Google Protocol 成功={}", customProtocol.toString()));
+    }
+
 
 }

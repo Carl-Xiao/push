@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date: 2021/12/23
  */
 public class ChannelHolder {
-    public static final Map<Long, NioSocketChannel> MAP = new ConcurrentHashMap<>(16) ;
+    public static final Map<String, NioSocketChannel> MAP = new ConcurrentHashMap<>(16) ;
 
-    public static void put(Long id,NioSocketChannel socketChannel){
+    public static void put(String id,NioSocketChannel socketChannel){
         MAP.put(id,socketChannel) ;
     }
 

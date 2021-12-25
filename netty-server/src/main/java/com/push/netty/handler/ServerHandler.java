@@ -2,6 +2,7 @@ package com.push.netty.handler;
 
 
 import com.common.model.CustomProtocol;
+import com.common.model.protobuf.BaseRequestProto;
 import com.push.netty.ChannelHolder;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author carl-xiao
  **/
-public class ServerHandler extends SimpleChannelInboundHandler<CustomProtocol> {
+public class ServerHandler extends SimpleChannelInboundHandler<BaseRequestProto.Request> {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerHandler.class);
     private final static Object HEAR_BEAT = Unpooled.copiedBuffer(new CustomProtocol(12345L, "pong").toString(), CharsetUtil.UTF_8);
@@ -35,23 +36,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<CustomProtocol> {
     }
 
     /**
-     * 注册节点
-     *
-     * @param ctx
-     * @param customProtocol
-     * @throws Exception
-     */
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, CustomProtocol customProtocol) throws Exception {
-        ChannelHolder.put(customProtocol.getId(), (NioSocketChannel) ctx.channel());
-    }
-
-    /**
      * @param ctx handlerContext
      * @throws Exception
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ChannelHolder.remove((NioSocketChannel) ctx.channel());
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, BaseRequestProto.Request request) throws Exception {
+        logger.info("request msg {}", request.toString());
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 @Endpoint(id = "features")
 public class CustomEndpoint {
     @ReadOperation
-    public Map<Long, NioSocketChannel> features() {
+    public Map<String, NioSocketChannel> features() {
         return ChannelHolder.MAP;
     }
 }
