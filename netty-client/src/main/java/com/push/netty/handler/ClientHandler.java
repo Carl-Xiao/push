@@ -2,6 +2,7 @@ package com.push.netty.handler;
 
 
 import com.common.model.CustomProtocol;
+import com.common.model.protobuf.BaseResponseProto;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author carl-xiao
  **/
-public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class ClientHandler extends SimpleChannelInboundHandler<BaseResponseProto.Response> {
 
     private final static Logger logger = LoggerFactory.getLogger(ClientHandler.class);
 
@@ -40,7 +41,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-        logger.info("客户端收到消息={}", in.toString(CharsetUtil.UTF_8));
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, BaseResponseProto.Response response) throws Exception {
+        logger.info("客户端收到消息={}", response.getResMsg());
     }
 }
